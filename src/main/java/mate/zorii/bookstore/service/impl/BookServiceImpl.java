@@ -1,28 +1,36 @@
 package mate.zorii.bookstore.service.impl;
 
 import java.util.List;
-import mate.zorii.bookstore.model.Book;
+import lombok.AllArgsConstructor;
+import mate.zorii.bookstore.dto.BookDto;
+import mate.zorii.bookstore.dto.CreateBookRequestDto;
+import mate.zorii.bookstore.exception.EntityNotFoundException;
+import mate.zorii.bookstore.mapper.BookMapper;
 import mate.zorii.bookstore.repository.BookRepository;
 import mate.zorii.bookstore.service.BookService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+@AllArgsConstructor
 @Service
 public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
+    private final BookMapper bookMapper;
 
-    @Autowired
-    public BookServiceImpl(BookRepository bookRepository) {
-        this.bookRepository = bookRepository;
+    @Override
+    public BookDto save(CreateBookRequestDto requestDto) {
+        return bookMapper.toDto(bookRepository.save(bookMapper.toModel(requestDto)));
     }
 
     @Override
-    public Book save(Book book) {
-        return bookRepository.save(book);
+    public List<BookDto> findAll() {
+        return bookRepository.findAll().stream()
+                .map(bookMapper::toDto)
+                .toList();
     }
 
     @Override
-    public List<Book> findAll() {
-        return bookRepository.findAll();
+    public BookDto findById(Long id) {
+        return bookMapper.toDto(bookRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("No book found by id " + id)));
     }
 }
