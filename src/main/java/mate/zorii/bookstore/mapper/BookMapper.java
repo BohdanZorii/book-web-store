@@ -2,7 +2,7 @@ package mate.zorii.bookstore.mapper;
 
 import mate.zorii.bookstore.config.MapperConfig;
 import mate.zorii.bookstore.dto.BookDto;
-import mate.zorii.bookstore.dto.CreateBookRequestDto;
+import mate.zorii.bookstore.dto.CreateOrUpdateBookRequestDto;
 import mate.zorii.bookstore.model.Book;
 import org.mapstruct.Mapper;
 
@@ -10,5 +10,5 @@ import org.mapstruct.Mapper;
 public interface BookMapper {
     BookDto toDto(Book book);
 
-    Book toModel(CreateBookRequestDto requestDto);
+    Book toModel(CreateOrUpdateBookRequestDto requestDto);
 }
