@@ -1,10 +1,13 @@
 package mate.zorii.bookstore.service;
 
 import java.util.List;
-import mate.zorii.bookstore.model.Book;
+import mate.zorii.bookstore.dto.BookDto;
+import mate.zorii.bookstore.dto.CreateBookRequestDto;
 
 public interface BookService {
-    Book save(Book book);
+    BookDto save(CreateBookRequestDto requestDto);
 
-    List<Book> findAll();
+    List<BookDto> findAll();
+
+    BookDto findById(Long id);
 }
