@@ -1,5 +1,7 @@
 package mate.zorii.bookstore.controller;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.PositiveOrZero;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import mate.zorii.bookstore.dto.BookDto;
@@ -27,7 +29,7 @@ public class BookController {
     }
 
     @GetMapping("/{id}")
-    public BookDto findById(@PathVariable Long id) {
+    public BookDto findById(@PathVariable @PositiveOrZero Long id) {
         return bookService.findById(id);
     }
 
@@ -37,18 +39,18 @@ public class BookController {
     }
 
     @PostMapping
-    public BookDto create(@RequestBody CreateOrUpdateBookRequestDto requestDto) {
+    public BookDto create(@RequestBody @Valid CreateOrUpdateBookRequestDto requestDto) {
         return bookService.save(requestDto);
     }
 
     @PutMapping("{id}")
-    public BookDto update(@PathVariable Long id,
-                          @RequestBody CreateOrUpdateBookRequestDto requestDto) {
+    public BookDto update(@PathVariable @PositiveOrZero Long id,
+                          @RequestBody @Valid CreateOrUpdateBookRequestDto requestDto) {
         return bookService.update(id, requestDto);
     }
 
     @DeleteMapping("{id}")
-    public void delete(@PathVariable Long id) {
+    public void delete(@PathVariable @PositiveOrZero Long id) {
         bookService.deleteById(id);
     }
 }
