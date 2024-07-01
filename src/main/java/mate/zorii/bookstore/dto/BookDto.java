@@ -25,7 +25,6 @@ public class BookDto {
     private BigDecimal price;
     @Size(max = 2000, message = "Description must be less than 2000 characters")
     private String description;
-
     @Size(max = 255, message = "Cover image URL must be less than 255 characters")
     private String coverImage;
 }
