@@ -1,9 +1,9 @@
 package mate.zorii.bookstore.dto;
 
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
 import lombok.Data;
@@ -20,11 +20,10 @@ public class CreateOrUpdateBookRequestDto {
     @Pattern(regexp = "^(97(8|9))?\\d{9}(\\d|X)$", message = "Invalid ISBN format")
     private String isbn;
     @NotNull
-    @Min(0)
+    @Positive
     private BigDecimal price;
     @Size(max = 2000, message = "Description must be less than 2000 characters")
     private String description;
-
     @Size(max = 255, message = "Cover image URL must be less than 255 characters")
     private String coverImage;
 }

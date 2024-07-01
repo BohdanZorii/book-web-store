@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<List<String>> handleValidationExceptions(
             MethodArgumentNotValidException ex) {
@@ -19,13 +18,6 @@ public class GlobalExceptionHandler {
                 .map(this::getErrorMessage)
                 .toList();
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
-    }
-
-    private String getErrorMessage(ObjectError objectError) {
-        if (objectError instanceof FieldError fieldError) {
-            return fieldError.getField() + " " + fieldError.getDefaultMessage();
-        }
-        return objectError.getDefaultMessage();
     }
 
     @ExceptionHandler(Exception.class)
@@ -38,5 +30,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleNullPointerExceptions(NullPointerException ex) {
         return new ResponseEntity<>("Null pointer exception occurred",
                 HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    private String getErrorMessage(ObjectError objectError) {
+        if (objectError instanceof FieldError fieldError) {
+            return fieldError.getField() + " " + fieldError.getDefaultMessage();
+        }
+        return objectError.getDefaultMessage();
     }
 }
