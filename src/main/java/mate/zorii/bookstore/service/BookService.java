@@ -4,11 +4,13 @@ import java.util.List;
 import mate.zorii.bookstore.dto.BookDto;
 import mate.zorii.bookstore.dto.BookSearchRequestDto;
 import mate.zorii.bookstore.dto.CreateOrUpdateBookRequestDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface BookService {
     BookDto save(CreateOrUpdateBookRequestDto requestDto);
 
-    List<BookDto> findAll();
+    Page<BookDto> findAll(Pageable pageable);
 
     BookDto findById(Long id);
 

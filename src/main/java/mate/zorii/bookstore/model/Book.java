@@ -30,6 +30,7 @@ public class Book {
     private String isbn;
     @Column(nullable = false)
     private BigDecimal price;
+    @Column(length = 2000)
     private String description;
     private String coverImage;
     @Column(nullable = false)
