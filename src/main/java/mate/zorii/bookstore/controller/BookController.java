@@ -1,5 +1,8 @@
 package mate.zorii.bookstore.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.PositiveOrZero;
 import java.util.List;
@@ -22,37 +25,59 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/books")
 @AllArgsConstructor
+@Tag(name = "Books API", description = "APIs for managing books")
 public class BookController {
+
     private final BookService bookService;
 
     @GetMapping
-    public Page<BookDto> findAll(Pageable pageable) {
+    @Operation(summary = "Get all books", description = "Returns a list of all books")
+    public Page<BookDto> findAll(@Parameter(description =
+            "Pageable object for pagination and sorting") Pageable pageable) {
         return bookService.findAll(pageable);
     }
 
     @GetMapping("/{id}")
-    public BookDto findById(@PathVariable @PositiveOrZero Long id) {
+    @Operation(summary = "Get a book by ID", description = "Returns the book with the specified ID")
+    public BookDto findById(@Parameter(description = "ID of the book to retrieve", example = "1")
+                                @PathVariable @PositiveOrZero Long id) {
         return bookService.findById(id);
     }
 
     @GetMapping("/search")
-    public List<BookDto> search(@RequestBody BookSearchRequestDto requestDto) {
+    @Operation(summary = "Search books",
+            description = "Searches books based on the provided criteria")
+    public List<BookDto> search(
+            @Parameter(description = "Search criteria for filtering books")
+            @RequestBody BookSearchRequestDto requestDto) {
         return bookService.search(requestDto);
     }
 
     @PostMapping
-    public BookDto create(@RequestBody @Valid CreateOrUpdateBookRequestDto requestDto) {
+    @Operation(summary = "Create a new book", description = "Creates and returns a new book")
+    public BookDto create(
+            @Parameter(description = "Request body containing book details")
+            @RequestBody @Valid CreateOrUpdateBookRequestDto requestDto) {
         return bookService.save(requestDto);
     }
 
     @PutMapping("{id}")
-    public BookDto update(@PathVariable @PositiveOrZero Long id,
-                          @RequestBody @Valid CreateOrUpdateBookRequestDto requestDto) {
+    @Operation(summary = "Update a book by ID",
+            description = "Updates and returns the updated book")
+    public BookDto update(
+            @Parameter(description = "ID of the book to update", example = "1")
+            @PathVariable @PositiveOrZero Long id,
+            @Parameter(description = "Request body containing updated book details")
+            @RequestBody @Valid CreateOrUpdateBookRequestDto requestDto) {
         return bookService.update(id, requestDto);
     }
 
     @DeleteMapping("{id}")
-    public void delete(@PathVariable @PositiveOrZero Long id) {
+    @Operation(summary = "Delete a book by ID",
+            description = "Deletes the book with the specified ID")
+    public void delete(
+            @Parameter(description = "ID of the book to delete", example = "1")
+            @PathVariable @PositiveOrZero Long id) {
         bookService.deleteById(id);
     }
 }
