@@ -36,7 +36,7 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: description
-                  type: varchar(255)
+                  type: varchar(2000)
               - column:
                   name: cover_image
                   type: varchar(255)
