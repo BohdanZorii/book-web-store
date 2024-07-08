@@ -1,12 +1,10 @@
 package mate.zorii.bookstore.service;
 
-import java.util.Optional;
 import mate.zorii.bookstore.dto.user.UserRegistrationRequestDto;
 import mate.zorii.bookstore.dto.user.UserResponseDto;
-import mate.zorii.bookstore.model.User;
+import mate.zorii.bookstore.exception.RegistrationException;
 
 public interface UserService {
-    Optional<User> findByEmail(String email);
+    UserResponseDto register(UserRegistrationRequestDto request) throws RegistrationException;
 
-    UserResponseDto save(UserRegistrationRequestDto requestDto);
 }
