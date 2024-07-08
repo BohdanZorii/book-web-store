@@ -3,7 +3,9 @@ package mate.zorii.bookstore.dto.user;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import mate.zorii.bookstore.validation.FieldsMatch;
 
+@FieldsMatch(field = "password", fieldMatch = "repeatPassword", message = "Passwords don't match!")
 public record UserRegistrationRequestDto(
         @Email(message = "Invalid email format")
         @NotBlank
