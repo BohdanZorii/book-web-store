@@ -1,7 +1,7 @@
 package mate.zorii.bookstore.repository;
 
 import jakarta.persistence.criteria.Predicate;
-import mate.zorii.bookstore.dto.BookSearchRequestDto;
+import mate.zorii.bookstore.dto.book.BookSearchRequestDto;
 import mate.zorii.bookstore.model.Book;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
