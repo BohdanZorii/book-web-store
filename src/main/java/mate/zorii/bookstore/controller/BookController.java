@@ -14,8 +14,6 @@ import mate.zorii.bookstore.service.BookService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,17 +31,15 @@ public class BookController {
     private final BookService bookService;
 
     @GetMapping
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('USER')")
     @Operation(summary = "Get all books", description = "Returns a list of all books")
     public Page<BookResponseDto> findAll(@Parameter(description =
             "Pageable object for pagination and sorting") Pageable pageable) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println("Authenticated user roles: " + auth.getAuthorities());
         return bookService.findAll(pageable);
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('USER')")
     @Operation(summary = "Get a book by ID", description = "Returns the book with the specified ID")
     public BookResponseDto findById(
             @Parameter(description = "ID of the book to retrieve", example = "1")
@@ -52,7 +48,7 @@ public class BookController {
     }
 
     @GetMapping("/search")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('USER')")
     @Operation(summary = "Search books",
             description = "Searches books based on the provided criteria")
     public List<BookResponseDto> search(
@@ -62,7 +58,7 @@ public class BookController {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Create a new book", description = "Creates and returns a new book")
     public BookResponseDto create(
             @Parameter(description = "Request body containing book details")
@@ -71,7 +67,7 @@ public class BookController {
     }
 
     @PutMapping("{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Update a book by ID",
             description = "Updates and returns the updated book")
     public BookResponseDto update(
@@ -83,7 +79,7 @@ public class BookController {
     }
 
     @DeleteMapping("{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Delete a book by ID",
             description = "Deletes the book with the specified ID")
     public void delete(
