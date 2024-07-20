@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-categories
+      author: zorii
+      changes:
+        - insert:
+            tableName: categories
+            columns:
+              - column:
+                  name: name
+                  value: "Fantasy"
+              - column:
+                  name: description
+                  value: "Fantasy books category"
+        - insert:
+            tableName: categories
+            columns:
+              - column:
+                  name: name
+                  value: "Adventure"
+              - column:
+                  name: description
+                  value: "Adventure books category"
