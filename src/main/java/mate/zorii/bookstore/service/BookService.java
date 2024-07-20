@@ -1,22 +1,24 @@
 package mate.zorii.bookstore.service;
 
 import java.util.List;
-import mate.zorii.bookstore.dto.book.BookResponseDto;
+import mate.zorii.bookstore.dto.book.BookDto;
+import mate.zorii.bookstore.dto.book.BookResponseDtoWithoutCategoryIds;
 import mate.zorii.bookstore.dto.book.BookSearchRequestDto;
-import mate.zorii.bookstore.dto.book.CreateOrUpdateBookRequestDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface BookService {
-    BookResponseDto save(CreateOrUpdateBookRequestDto requestDto);
+    BookDto save(BookDto bookDto);
 
-    Page<BookResponseDto> findAll(Pageable pageable);
+    Page<BookDto> findAll(Pageable pageable);
 
-    BookResponseDto findById(Long id);
+    BookDto findById(Long id);
 
-    BookResponseDto update(Long id, CreateOrUpdateBookRequestDto requestDto);
+    BookDto update(Long id, BookDto bookDto);
 
     void deleteById(Long id);
 
-    List<BookResponseDto> search(BookSearchRequestDto requestDto);
+    List<BookDto> search(BookSearchRequestDto bookDto);
+
+    List<BookResponseDtoWithoutCategoryIds> getBooksByCategoryId(Long categoryId);
 }

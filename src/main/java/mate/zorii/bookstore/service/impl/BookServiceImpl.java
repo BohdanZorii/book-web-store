@@ -2,9 +2,9 @@ package mate.zorii.bookstore.service.impl;
 
 import java.util.List;
 import lombok.AllArgsConstructor;
-import mate.zorii.bookstore.dto.book.BookResponseDto;
+import mate.zorii.bookstore.dto.book.BookDto;
+import mate.zorii.bookstore.dto.book.BookResponseDtoWithoutCategoryIds;
 import mate.zorii.bookstore.dto.book.BookSearchRequestDto;
-import mate.zorii.bookstore.dto.book.CreateOrUpdateBookRequestDto;
 import mate.zorii.bookstore.exception.EntityNotFoundException;
 import mate.zorii.bookstore.mapper.BookMapper;
 import mate.zorii.bookstore.model.Book;
@@ -24,38 +24,45 @@ public class BookServiceImpl implements BookService {
     private final SpecificationProvider specificationProvider;
 
     @Override
-    public BookResponseDto save(CreateOrUpdateBookRequestDto requestDto) {
-        return bookMapper.toDto(bookRepository.save(bookMapper.toModel(requestDto)));
+    public BookDto save(BookDto bookDto) {
+        Book savedBook = bookRepository.save(bookMapper.toModel(bookDto));
+        return bookMapper.toDto(savedBook);
     }
 
     @Override
-    public Page<BookResponseDto> findAll(Pageable pageable) {
+    public Page<BookDto> findAll(Pageable pageable) {
         return bookRepository.findAll(pageable)
                 .map(bookMapper::toDto);
     }
 
     @Override
-    public BookResponseDto findById(Long id) {
+    public BookDto findById(Long id) {
         return bookRepository.findById(id)
                 .map(bookMapper::toDto)
                 .orElseThrow(() -> new EntityNotFoundException("No book found by id " + id));
     }
 
     @Override
-    public BookResponseDto update(Long id, CreateOrUpdateBookRequestDto requestDto) {
+    public BookDto update(Long id, BookDto bookDto) {
         Book book = bookRepository.findById(id)
-                .orElseThrow(()
-                        -> new EntityNotFoundException("No book found by id " + id));
-        bookMapper.updateBookFromDto(requestDto, book);
+                .orElseThrow(() -> new EntityNotFoundException("No book found by id " + id));
+        bookMapper.updateBookFromDto(book, bookDto);
         return bookMapper.toDto(bookRepository.save(book));
     }
 
     @Override
-    public List<BookResponseDto> search(BookSearchRequestDto requestDto) {
-        Specification<Book> spec = specificationProvider.getSpecification(requestDto);
+    public List<BookDto> search(BookSearchRequestDto bookDto) {
+        Specification<Book> spec = specificationProvider.getSpecification(bookDto);
         List<Book> books = bookRepository.findAll(spec);
         return books.stream()
                 .map(bookMapper::toDto)
+                .toList();
+    }
+
+    @Override
+    public List<BookResponseDtoWithoutCategoryIds> getBooksByCategoryId(Long categoryId) {
+        return bookRepository.findAllByCategories_Id(categoryId).stream()
+                .map(bookMapper::toDtoWithoutCategories)
                 .toList();
     }
 

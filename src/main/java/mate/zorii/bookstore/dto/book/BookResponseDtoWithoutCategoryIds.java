@@ -2,8 +2,7 @@ package mate.zorii.bookstore.dto.book;
 
 import java.math.BigDecimal;
 
-public record BookResponseDto(
-        Long id,
+public record BookResponseDtoWithoutCategoryIds(
         String title,
         String author,
         String isbn,
