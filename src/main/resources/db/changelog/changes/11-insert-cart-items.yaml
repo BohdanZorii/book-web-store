@@ -7,7 +7,10 @@ databaseChangeLog:
             tableName: cart_items
             columns:
               - column:
-                  name: shopping_cart_id
+                  name: id
+                  value: "1"
+              - column:
+                  name: shopping_cart_user_id
                   value: "1"
               - column:
                   name: book_id
@@ -20,7 +23,10 @@ databaseChangeLog:
             tableName: cart_items
             columns:
               - column:
-                  name: shopping_cart_id
+                  name: id
+                  value: "2"
+              - column:
+                  name: shopping_cart_user_id
                   value: "1"
               - column:
                   name: book_id

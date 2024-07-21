@@ -12,6 +12,7 @@ import mate.zorii.bookstore.model.User;
 import mate.zorii.bookstore.service.ShoppingCartService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/cart")
+@Validated
 @RequiredArgsConstructor
 @Tag(name = "Shopping Cart API", description = "APIs for managing the shopping cart")
 public class ShoppingCartController {
@@ -40,7 +42,7 @@ public class ShoppingCartController {
     @PreAuthorize("hasRole('USER')")
     @Operation(summary = "Add item to shopping cart",
             description = "Adds a new item to the shopping cart for the authenticated user.")
-    public CartItemDto addCartItem(
+    public ShoppingCartResponseDto addCartItem(
             @RequestBody @Valid CartItemDto cartItemDto,
             Authentication auth) {
         return shoppingCartService.addCartItem(cartItemDto, getAuthenticatedUserId(auth));
@@ -50,18 +52,23 @@ public class ShoppingCartController {
     @PreAuthorize("hasRole('USER')")
     @Operation(summary = "Update item quantity in shopping cart",
             description = "Updates the quantity of a specific item in the shopping cart.")
-    public CartItemDto updateBookQuantity(
+    public ShoppingCartResponseDto updateBookQuantity(
             @PathVariable @Positive Long cartItemId,
-            @RequestBody @Valid CartItemUpdateDto cartItemUpdateDto) {
-        return shoppingCartService.updateCartItem(cartItemId, cartItemUpdateDto);
+            @RequestBody @Valid CartItemUpdateDto cartItemUpdateDto,
+            Authentication auth) {
+        return shoppingCartService.updateCartItem(
+                cartItemId,
+                getAuthenticatedUserId(auth),
+                cartItemUpdateDto);
     }
 
     @DeleteMapping("items/{cartItemId}")
     @PreAuthorize("hasRole('USER')")
     @Operation(summary = "Delete item from shopping cart",
             description = "Removes a specific item from the shopping cart.")
-    public void deleteCartItem(@PathVariable @Positive Long cartItemId) {
-        shoppingCartService.deleteCartItem(cartItemId);
+    public void deleteCartItem(@PathVariable @Positive Long cartItemId,
+                               Authentication auth) {
+        shoppingCartService.deleteCartItem(cartItemId, getAuthenticatedUserId(auth));
     }
 
     private Long getAuthenticatedUserId(Authentication authentication) {
