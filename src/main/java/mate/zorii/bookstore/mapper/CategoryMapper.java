@@ -11,6 +11,7 @@ import org.mapstruct.MappingTarget;
 public interface CategoryMapper {
     CategoryDto toDto(Category category);
 
+    @Mapping(target = "id", ignore = true)
     Category toModel(CategoryDto dto);
 
     @Mapping(target = "id", ignore = true)

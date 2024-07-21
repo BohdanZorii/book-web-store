@@ -10,6 +10,7 @@ import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+import org.mapstruct.Named;
 
 @Mapper(config = MapperConfig.class)
 public interface BookMapper {
@@ -44,4 +45,11 @@ public interface BookMapper {
 
     @Mapping(target = "id", ignore = true)
     void updateBookFromDto(@MappingTarget Book book, BookDto bookDto);
+
+    @Named("bookById")
+    default Book getBookById(Long bookId) {
+        Book book = new Book();
+        book.setId(bookId);
+        return book;
+    }
 }
