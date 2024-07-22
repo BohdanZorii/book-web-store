@@ -46,7 +46,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                 }).orElse(mapper.toModel(cartItemDto, shoppingCart));
 
         cartItemRepository.save(cartItem);
-        return findByUserId(userId);
+        return mapper.toShoppingCartDto(shoppingCart);
     }
 
     @Override
