@@ -1,5 +1,7 @@
 package mate.zorii.bookstore.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import mate.zorii.bookstore.dto.user.UserLoginRequestDto;
@@ -17,17 +19,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/auth")
 @AllArgsConstructor
+@Tag(name = "Authentication API", description = "APIs for user authentication and registration")
 public class AuthenticationController {
     private final UserService userService;
     private final AuthenticationService authenticationService;
 
     @PostMapping("/registration")
+    @Operation(summary = "Register a new user", description = "Registers a new user in the system.")
     public UserResponseDto register(@RequestBody @Valid UserRegistrationRequestDto request)
             throws RegistrationException {
         return userService.register(request);
     }
 
     @PostMapping("/login")
+    @Operation(summary = "User login", description = "Authenticates a user and returns a token.")
     public UserLoginResponseDto login(@RequestBody @Valid UserLoginRequestDto request) {
         return authenticationService.authenticate(request);
     }

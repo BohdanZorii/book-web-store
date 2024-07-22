@@ -1,0 +1,68 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-books
+      author: zorii
+      changes:
+        - insert:
+            tableName: books
+            columns:
+              - column:
+                  name: title
+                  value: "The Hobbit"
+              - column:
+                  name: author
+                  value: "J.R.R. Tolkien"
+              - column:
+                  name: isbn
+                  value: "978-3-16-148410-0"
+              - column:
+                  name: price
+                  value: "9.99"
+              - column:
+                  name: description
+                  value: "A fantasy novel and children's book by J. R. R. Tolkien."
+              - column:
+                  name: cover_image
+                  value: "the_hobbit_cover.jpg"
+        - insert:
+            tableName: books
+            columns:
+              - column:
+                  name: title
+                  value: "Harry Potter and the Philosopher's Stone"
+              - column:
+                  name: author
+                  value: "J.K. Rowling"
+              - column:
+                  name: isbn
+                  value: "978-1-4088-5567-5"
+              - column:
+                  name: price
+                  value: "7.99"
+              - column:
+                  name: description
+                  value: "A fantasy novel written by British author J.K. Rowling."
+              - column:
+                  name: cover_image
+                  value: "harry_potter_cover.jpg"
+        - insert:
+            tableName: books
+            columns:
+              - column:
+                  name: title
+                  value: "All Quiet on the Western Front"
+              - column:
+                  name: author
+                  value: "Erich Maria Remarque"
+              - column:
+                  name: isbn
+                  value: "978-0-449-21394-0"
+              - column:
+                  name: price
+                  value: "12.99"
+              - column:
+                  name: description
+                  value: "A novel by Erich Maria Remarque, a German veteran of World War I."
+              - column:
+                  name: cover_image
+                  value: "all_quiet_cover.jpg"
