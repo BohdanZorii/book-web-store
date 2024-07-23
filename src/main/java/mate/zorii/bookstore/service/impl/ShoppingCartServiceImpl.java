@@ -67,8 +67,10 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
+    @Transactional
     public void deleteCartItem(Long cartItemId, Long userId) {
-        cartItemRepository.findByIdAndShoppingCart_Id(cartItemId, userId)
+        ShoppingCart shoppingCart = shoppingCartRepository.findByUserId(userId);
+        cartItemRepository.findByIdAndShoppingCart_Id(cartItemId, shoppingCart.getId())
                 .orElseThrow(() -> new EntityNotFoundException(
                         String.format("No cart item with id: %d for user: %d",
                                 cartItemId, userId)));
