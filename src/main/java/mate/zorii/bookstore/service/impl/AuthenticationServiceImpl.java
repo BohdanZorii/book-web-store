@@ -3,6 +3,7 @@ package mate.zorii.bookstore.service.impl;
 import lombok.RequiredArgsConstructor;
 import mate.zorii.bookstore.dto.user.UserLoginRequestDto;
 import mate.zorii.bookstore.dto.user.UserLoginResponseDto;
+import mate.zorii.bookstore.model.User;
 import mate.zorii.bookstore.security.JwtUtil;
 import mate.zorii.bookstore.service.AuthenticationService;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,5 +23,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 new UsernamePasswordAuthenticationToken(request.email(), request.password()));
         String token = jwtUtil.generateToken(authentication.getName());
         return new UserLoginResponseDto(token);
+    }
+
+    @Override
+    public Long getAuthenticatedUserId(Authentication authentication) {
+        User authenticatedUser = (User) authentication.getPrincipal();
+        return authenticatedUser.getId();
     }
 }
