@@ -4,7 +4,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
-import java.awt.print.Pageable;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import mate.zorii.bookstore.dto.order.CreateOrderRequestDto;
@@ -14,6 +13,7 @@ import mate.zorii.bookstore.dto.order.UpdateOrderStatusDto;
 import mate.zorii.bookstore.service.AuthenticationService;
 import mate.zorii.bookstore.service.OrderService;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
@@ -48,7 +48,7 @@ public class OrderController {
     @Operation(summary = "Get all orders for authenticated user",
             description = "Retrieves all orders for authenticated user with pagination support.")
     public Page<OrderResponseDto> getAllOrders(Pageable pageable, Authentication auth) {
-        return orderService.getAllOrders(pageable, authService.getAuthenticatedUserId(auth));
+        return orderService.getAllOrders(authService.getAuthenticatedUserId(auth), pageable);
     }
 
     @PatchMapping("/{orderId}")

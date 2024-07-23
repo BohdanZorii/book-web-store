@@ -48,6 +48,7 @@ public class Order {
         CONFIRMED,
         SHIPPED,
         DELIVERED,
+        COMPLETED,
         CANCELLED,
         RETURNED,
     }
