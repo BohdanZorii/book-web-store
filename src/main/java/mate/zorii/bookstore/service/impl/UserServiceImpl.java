@@ -7,16 +7,20 @@ import mate.zorii.bookstore.exception.RegistrationException;
 import mate.zorii.bookstore.mapper.UserMapper;
 import mate.zorii.bookstore.model.User;
 import mate.zorii.bookstore.repository.UserRepository;
+import mate.zorii.bookstore.service.ShoppingCartService;
 import mate.zorii.bookstore.service.UserService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final ShoppingCartService shoppingCartService;
 
     @Override
+    @Transactional
     public UserResponseDto register(UserRegistrationRequestDto bookDto)
             throws RegistrationException {
         if (userRepository.existsByEmail(bookDto.email())) {
@@ -24,6 +28,7 @@ public class UserServiceImpl implements UserService {
         }
         User user = userMapper.toModel(bookDto);
         userRepository.save(user);
+        shoppingCartService.createShoppingCart(user);
         return userMapper.toDto(user);
     }
 }

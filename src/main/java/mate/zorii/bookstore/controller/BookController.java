@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Positive;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import mate.zorii.bookstore.dto.book.BookDto;
@@ -13,6 +13,7 @@ import mate.zorii.bookstore.service.BookService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/books")
+@Validated
 @RequiredArgsConstructor
 @Tag(name = "Books API", description = "APIs for managing books")
 public class BookController {
@@ -41,7 +43,7 @@ public class BookController {
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('USER')")
     @Operation(summary = "Get a book by ID", description = "Returns the book with the specified ID")
-    public BookDto findById(@PathVariable @PositiveOrZero Long id) {
+    public BookDto findById(@PathVariable @Positive Long id) {
         return bookService.findById(id);
     }
 
@@ -65,7 +67,7 @@ public class BookController {
     @Operation(summary = "Update a book by ID",
             description = "Updates and returns the updated book")
     public BookDto update(
-            @PathVariable @PositiveOrZero Long id,
+            @PathVariable @Positive Long id,
             @RequestBody @Valid BookDto bookDto) {
         return bookService.update(id, bookDto);
     }
@@ -74,7 +76,7 @@ public class BookController {
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Delete a book by ID",
             description = "Deletes the book with the specified ID")
-    public void delete(@PathVariable @PositiveOrZero Long id) {
+    public void delete(@PathVariable @Positive Long id) {
         bookService.deleteById(id);
     }
 }

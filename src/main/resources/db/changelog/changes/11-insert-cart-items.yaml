@@ -1,0 +1,36 @@
+databaseChangeLog:
+  - changeSet:
+      id: 11-insert-cart-items
+      author: zorii
+      changes:
+        - insert:
+            tableName: cart_items
+            columns:
+              - column:
+                  name: id
+                  value: "1"
+              - column:
+                  name: shopping_cart_user_id
+                  value: "1"
+              - column:
+                  name: book_id
+                  value: "1"
+              - column:
+                  name: quantity
+                  value: "1"
+
+        - insert:
+            tableName: cart_items
+            columns:
+              - column:
+                  name: id
+                  value: "2"
+              - column:
+                  name: shopping_cart_user_id
+                  value: "1"
+              - column:
+                  name: book_id
+                  value: "2"
+              - column:
+                  name: quantity
+                  value: "1"

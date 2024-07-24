@@ -3,7 +3,7 @@ package mate.zorii.bookstore.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Positive;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import mate.zorii.bookstore.dto.book.BookResponseDtoWithoutCategoryIds;
@@ -13,6 +13,7 @@ import mate.zorii.bookstore.service.CategoryService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/categories")
+@Validated
 @RequiredArgsConstructor
 @Tag(name = "Category API", description = "APIs for managing categories")
 public class CategoryController {
@@ -42,7 +44,7 @@ public class CategoryController {
     @PreAuthorize("hasRole('USER')")
     @Operation(summary = "Get category by ID",
             description = "Retrieves a specific category by its ID.")
-    public CategoryDto getCategoryById(@PathVariable @PositiveOrZero Long id) {
+    public CategoryDto getCategoryById(@PathVariable @Positive Long id) {
         return categoryService.getById(id);
     }
 
@@ -51,7 +53,7 @@ public class CategoryController {
     @Operation(summary = "Get books by category ID",
             description = "Retrieves books associated with a specific category ID.")
     public List<BookResponseDtoWithoutCategoryIds> getBooksByCategoryId(
-            @PathVariable @PositiveOrZero Long id) {
+            @PathVariable @Positive Long id) {
         return bookService.getBooksByCategoryId(id);
     }
 
@@ -67,7 +69,7 @@ public class CategoryController {
     @Operation(summary = "Update an existing category",
             description = "Updates the details of an existing category.")
     public CategoryDto updateCategory(
-            @PathVariable @PositiveOrZero Long id,
+            @PathVariable @Positive Long id,
             @RequestBody @Valid CategoryDto categoryDto) {
         return categoryService.update(id, categoryDto);
     }
@@ -76,7 +78,7 @@ public class CategoryController {
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Delete a category", description = "Deletes a category by its ID.")
     public void deleteCategory(
-            @PathVariable @PositiveOrZero Long id) {
+            @PathVariable @Positive Long id) {
         categoryService.deleteById(id);
     }
 }
