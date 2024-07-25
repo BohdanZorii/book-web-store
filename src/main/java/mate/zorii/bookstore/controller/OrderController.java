@@ -12,6 +12,7 @@ import mate.zorii.bookstore.dto.order.OrderResponseDto;
 import mate.zorii.bookstore.dto.order.UpdateOrderStatusDto;
 import mate.zorii.bookstore.service.AuthenticationService;
 import mate.zorii.bookstore.service.OrderService;
+import mate.zorii.bookstore.service.ShoppingCartService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,14 +34,18 @@ import org.springframework.web.bind.annotation.RestController;
 public class OrderController {
     private final OrderService orderService;
     private final AuthenticationService authService;
+    private final ShoppingCartService shoppingCartService;
 
     @PostMapping
     @PreAuthorize("hasRole('USER')")
     @Operation(summary = "Create a new order",
             description = "Creates a new order for the currently authenticated user.")
-    public List<OrderResponseDto> createOrder(@RequestBody @Valid CreateOrderRequestDto requestDto,
-                                              Authentication auth) {
-        return orderService.createOrder(requestDto, authService.getAuthenticatedUserId(auth));
+    public List<OrderResponseDto> placeOrder(@RequestBody @Valid CreateOrderRequestDto requestDto,
+                                             Authentication auth) {
+        Long authenticatedUserId = authService.getAuthenticatedUserId(auth);
+        List<OrderResponseDto> orders = orderService.placeOrder(requestDto, authenticatedUserId);
+        shoppingCartService.clearCart(authenticatedUserId);
+        return orders;
     }
 
     @GetMapping

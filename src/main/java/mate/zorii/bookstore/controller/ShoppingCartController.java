@@ -46,8 +46,17 @@ public class ShoppingCartController {
     public ShoppingCartResponseDto addCartItem(
             @RequestBody @Valid CartItemDto cartItemDto,
             Authentication auth) {
-        return shoppingCartService.addCartItem(cartItemDto,
-                authService.getAuthenticatedUserId(auth));
+        Long authenticatedUserId = authService.getAuthenticatedUserId(auth);
+        shoppingCartService.addCartItem(cartItemDto, authenticatedUserId);
+        return shoppingCartService.findByUserId(authenticatedUserId);
+    }
+
+    @DeleteMapping("/clear")
+    @PreAuthorize("hasRole('USER')")
+    @Operation(summary = "Clear shopping cart",
+            description = "Deletes all items from the shopping cart for the authenticated user.")
+    public void clearCart(Authentication auth) {
+        shoppingCartService.clearCart(authService.getAuthenticatedUserId(auth));
     }
 
     @PutMapping("items/{cartItemId}")

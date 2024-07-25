@@ -40,7 +40,7 @@ public class Order {
     private LocalDateTime orderDate;
     @Column(nullable = false)
     private String shippingAddress;
-    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<OrderItem> orderItems = new HashSet<>();
 
     public enum Status {

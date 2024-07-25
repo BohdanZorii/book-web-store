@@ -1,6 +1,9 @@
 package mate.zorii.bookstore.service.impl;
 
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.PersistenceContext;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import mate.zorii.bookstore.dto.shoppingcart.CartItemDto;
 import mate.zorii.bookstore.dto.shoppingcart.CartItemUpdateDto;
@@ -23,15 +26,18 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     private final CartItemRepository cartItemRepository;
     private final BookRepository bookRepository;
     private final ShoppingCartMapper mapper;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Override
     public ShoppingCartResponseDto findByUserId(Long userId) {
-        return mapper.toShoppingCartDto(shoppingCartRepository.findByUserId(userId));
+        ShoppingCart cart = shoppingCartRepository.findByUserId(userId);
+        return mapper.toShoppingCartDto(cart);
     }
 
     @Override
     @Transactional
-    public ShoppingCartResponseDto addCartItem(CartItemDto cartItemDto, Long userId) {
+    public void addCartItem(CartItemDto cartItemDto, Long userId) {
         if (!bookRepository.existsById(cartItemDto.bookId())) {
             throw new EntityNotFoundException("No book found with id " + cartItemDto.bookId());
         }
@@ -46,7 +52,9 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                 }).orElse(mapper.toModel(cartItemDto, shoppingCart));
 
         cartItemRepository.save(cartItem);
-        return findByUserId(userId);
+        //ensure fresh data on the next select
+        entityManager.flush();
+        entityManager.clear();
     }
 
     @Override
@@ -80,5 +88,17 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         ShoppingCart shoppingCart = new ShoppingCart();
         shoppingCart.setUser(user);
         shoppingCartRepository.save(shoppingCart);
+    }
+
+    @Override
+    public Set<CartItem> getCartItemsByUserId(Long userId) {
+        return shoppingCartRepository.findByUserId(userId).getCartItems();
+    }
+
+    @Override
+    @Transactional
+    public void clearCart(Long userId) {
+        System.out.println("was here");//виводиться
+        cartItemRepository.deleteAllByShoppingCart_Id(userId);
     }
 }

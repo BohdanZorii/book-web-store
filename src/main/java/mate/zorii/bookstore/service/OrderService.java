@@ -9,7 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface OrderService {
-    List<OrderResponseDto> createOrder(CreateOrderRequestDto requestDto, Long authenticatedUserId);
+    List<OrderResponseDto> placeOrder(CreateOrderRequestDto requestDto, Long authenticatedUserId);
 
     List<OrderResponseDto> updateOrderStatus(Long orderId, UpdateOrderStatusDto updateDto);
 
