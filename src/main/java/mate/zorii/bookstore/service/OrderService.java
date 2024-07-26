@@ -1,17 +1,17 @@
 package mate.zorii.bookstore.service;
 
-import java.util.List;
 import mate.zorii.bookstore.dto.order.CreateOrderRequestDto;
 import mate.zorii.bookstore.dto.order.OrderItemResponseDto;
 import mate.zorii.bookstore.dto.order.OrderResponseDto;
+import mate.zorii.bookstore.dto.order.UpdateOrderResponseDto;
 import mate.zorii.bookstore.dto.order.UpdateOrderStatusDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface OrderService {
-    List<OrderResponseDto> placeOrder(CreateOrderRequestDto requestDto, Long authenticatedUserId);
+    OrderResponseDto placeOrder(CreateOrderRequestDto requestDto, Long authenticatedUserId);
 
-    List<OrderResponseDto> updateOrderStatus(Long orderId, UpdateOrderStatusDto updateDto);
+    UpdateOrderResponseDto updateOrderStatus(Long orderId, UpdateOrderStatusDto updateDto);
 
     Page<OrderItemResponseDto> getAllOrderItems(Long orderId, Pageable pageable);
 

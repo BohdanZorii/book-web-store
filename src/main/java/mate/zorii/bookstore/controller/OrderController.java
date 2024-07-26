@@ -4,15 +4,14 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import mate.zorii.bookstore.dto.order.CreateOrderRequestDto;
 import mate.zorii.bookstore.dto.order.OrderItemResponseDto;
 import mate.zorii.bookstore.dto.order.OrderResponseDto;
+import mate.zorii.bookstore.dto.order.UpdateOrderResponseDto;
 import mate.zorii.bookstore.dto.order.UpdateOrderStatusDto;
 import mate.zorii.bookstore.service.AuthenticationService;
 import mate.zorii.bookstore.service.OrderService;
-import mate.zorii.bookstore.service.ShoppingCartService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -34,18 +33,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class OrderController {
     private final OrderService orderService;
     private final AuthenticationService authService;
-    private final ShoppingCartService shoppingCartService;
 
     @PostMapping
     @PreAuthorize("hasRole('USER')")
     @Operation(summary = "Create a new order",
             description = "Creates a new order for the currently authenticated user.")
-    public List<OrderResponseDto> placeOrder(@RequestBody @Valid CreateOrderRequestDto requestDto,
-                                             Authentication auth) {
-        Long authenticatedUserId = authService.getAuthenticatedUserId(auth);
-        List<OrderResponseDto> orders = orderService.placeOrder(requestDto, authenticatedUserId);
-        shoppingCartService.clearCart(authenticatedUserId);
-        return orders;
+    public OrderResponseDto placeOrder(@RequestBody @Valid CreateOrderRequestDto requestDto,
+                                       Authentication auth) {
+        return orderService.placeOrder(requestDto, authService.getAuthenticatedUserId(auth));
     }
 
     @GetMapping
@@ -60,7 +55,7 @@ public class OrderController {
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Update order status",
             description = "Updates the status of a specific order.")
-    public List<OrderResponseDto> updateOrderStatus(
+    public UpdateOrderResponseDto updateOrderStatus(
             @PathVariable @Positive Long orderId,
             @RequestBody @Valid UpdateOrderStatusDto updateOrderStatusDto) {
         return orderService.updateOrderStatus(orderId, updateOrderStatusDto);
