@@ -31,6 +31,21 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
+    public OrderResponseDto placeOrder(CreateOrderRequestDto createDto,
+                                       Long userId) {
+        ShoppingCart cart = cartRepository.findByUserId(userId);
+        if (cart.getCartItems().isEmpty()) {
+            throw new IllegalArgumentException("No items in cart of user with id " + userId);
+        }
+        Order order = orderMapper.cartToOrder(cart, createDto.shippingAddress());
+        orderRepository.save(order);
+        orderItemMapper.setOrderItemsFromCart(order, cart);
+        cart.clearCart();
+        return orderMapper.toDto(orderRepository.save(order));
+    }
+
+    @Override
+    @Transactional
     public UpdateOrderResponseDto updateOrderStatus(Long orderId, UpdateOrderStatusDto updateDto) {
         Order updatedOrder = orderRepository.findById(orderId)
                 .map(order -> {
@@ -43,7 +58,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Page<OrderItemResponseDto> getAllOrderItems(Long orderId, Pageable pageable) {
         return orderItemRepository.findAllByOrderId(orderId, pageable)
-                .map(orderItemMapper::toOrderItemDto);
+                .map(orderItemMapper::toDto);
     }
 
     @Override
@@ -55,21 +70,8 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderItemResponseDto getOrderItem(Long orderId, Long itemId) {
         return orderItemRepository.findByIdAndOrder_Id(itemId, orderId)
-                .map(orderItemMapper::toOrderItemDto)
+                .map(orderItemMapper::toDto)
                 .orElseThrow(() -> new EntityNotFoundException(
                         String.format("No order item by id %d for orderId %d", itemId, orderId)));
-    }
-
-    @Override
-    @Transactional
-    public OrderResponseDto placeOrder(CreateOrderRequestDto createDto,
-                                       Long userId) {
-        ShoppingCart cart = cartRepository.findByUserId(userId);
-        if (cart.getCartItems().isEmpty()) {
-            throw new IllegalArgumentException("No items in cart of user with id " + userId);
-        }
-        Order order = orderMapper.cartToOrder(cart, createDto.shippingAddress());
-        cart.clearCart();
-        return orderMapper.toDto(orderRepository.save(order));
     }
 }

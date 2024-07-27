@@ -8,13 +8,11 @@ import mate.zorii.bookstore.dto.order.UpdateOrderResponseDto;
 import mate.zorii.bookstore.model.CartItem;
 import mate.zorii.bookstore.model.Order;
 import mate.zorii.bookstore.model.ShoppingCart;
-import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
 
-@Mapper(config = MapperConfig.class)
+@Mapper(config = MapperConfig.class, uses = OrderItemMapper.class)
 public interface OrderMapper {
     @Mapping(target = "userId", source = "user.id")
     OrderResponseDto toDto(Order order);
@@ -23,7 +21,6 @@ public interface OrderMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "total", source = "cart.cartItems", qualifiedByName = "total")
-    @Mapping(target = "orderItems", source = "cart.cartItems")
     Order cartToOrder(ShoppingCart cart, String shippingAddress);
 
     @Named("total")
@@ -31,10 +28,5 @@ public interface OrderMapper {
         return cartItems.stream()
                 .map(i -> i.getBook().getPrice().multiply(BigDecimal.valueOf(i.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-
-    @AfterMapping
-    default void setOrderForItems(@MappingTarget Order order) {
-        order.getOrderItems().forEach(oi -> oi.setOrder(order));
     }
 }

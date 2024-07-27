@@ -36,7 +36,6 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         if (!bookRepository.existsById(cartItemDto.bookId())) {
             throw new EntityNotFoundException("No book found with id " + cartItemDto.bookId());
         }
-
         ShoppingCart cart = shoppingCartRepository.findByUserId(userId);
         CartItem cartItem = cart.getCartItems().stream()
                 .filter(item -> item.getBook().getId().equals(cartItemDto.bookId()))
@@ -45,7 +44,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                     item.setQuantity(item.getQuantity() + cartItemDto.quantity());
                     return item;
                 }).orElse(mapper.toModel(cartItemDto, cart));
-        cartItemRepository.save(cartItem);
+        cart.getCartItems().add(cartItem);
+        shoppingCartRepository.save(cart);
         return mapper.toShoppingCartDto(cart);
     }
 
