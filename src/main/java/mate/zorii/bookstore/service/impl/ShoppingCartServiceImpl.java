@@ -26,7 +26,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     public ShoppingCartResponseDto findByUserId(Long userId) {
-        return mapper.toShoppingCartDto(shoppingCartRepository.findByUserId(userId));
+        ShoppingCart cart = shoppingCartRepository.findByUserId(userId);
+        return mapper.toShoppingCartDto(cart);
     }
 
     @Override
@@ -35,18 +36,17 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         if (!bookRepository.existsById(cartItemDto.bookId())) {
             throw new EntityNotFoundException("No book found with id " + cartItemDto.bookId());
         }
-
-        ShoppingCart shoppingCart = shoppingCartRepository.findByUserId(userId);
-        CartItem cartItem = shoppingCart.getCartItems().stream()
+        ShoppingCart cart = shoppingCartRepository.findByUserId(userId);
+        CartItem cartItem = cart.getCartItems().stream()
                 .filter(item -> item.getBook().getId().equals(cartItemDto.bookId()))
                 .findFirst()
                 .map(item -> {
                     item.setQuantity(item.getQuantity() + cartItemDto.quantity());
                     return item;
-                }).orElse(mapper.toModel(cartItemDto, shoppingCart));
-
-        cartItemRepository.save(cartItem);
-        return mapper.toShoppingCartDto(shoppingCart);
+                }).orElse(mapper.toModel(cartItemDto, cart));
+        cart.getCartItems().add(cartItem);
+        shoppingCartRepository.save(cart);
+        return mapper.toShoppingCartDto(cart);
     }
 
     @Override
