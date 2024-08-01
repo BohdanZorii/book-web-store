@@ -1,0 +1,29 @@
+version: "3.8"
+
+services:
+  mysqldb:
+    platform: linux/x86_64
+    image: mysql:8.0.36
+    restart: unless-stopped
+    env_file: ./.env
+    ports:
+      - "${MYSQL_LOCAL_PORT}:${MYSQL_DOCKER_PORT}"
+
+  app:
+    depends_on:
+      - mysqldb
+    restart: on-failure
+    image: book-web-store
+    build: .
+    env_file: ./.env
+    ports:
+      - "${SPRING_LOCAL_PORT}:${SPRING_DOCKER_PORT}"
+      - "${DEBUG_PORT}:${DEBUG_PORT}"
+    environment:
+      SPRING_APPLICATION_JSON: '{
+        "spring.datasource.url": "jdbc:mysql://mysqldb:${MYSQL_DOCKER_PORT}/${MYSQL_DATABASE}",
+        "spring.datasource.username": "${MYSQL_USER}",
+        "spring.datasource.password": "${MYSQL_PASSWORD}",
+        "spring.jpa.properties.hibernate.dialect": "org.hibernate.dialect.MySQLDialect"
+      }'
+      JAVA_TOOL_OPTIONS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
