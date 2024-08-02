@@ -1,0 +1,10 @@
+INSERT INTO orders (user_id, status, total, order_date, shipping_address) VALUES (1, 'PENDING', '100.00', '2023-01-01T00:00:00', '123 Main St');
+INSERT INTO orders (user_id, status, total, order_date, shipping_address) VALUES (1, 'SHIPPED', '150.00', '2023-01-02T00:00:00', '456 Elm St');
+INSERT INTO orders (user_id, status, total, order_date, shipping_address) VALUES (1, 'DELIVERED', '200.00', '2023-01-03T00:00:00', '789 Oak St');
+INSERT INTO orders (user_id, status, total, order_date, shipping_address) VALUES (1, 'RETURNED', '120.00', '2023-01-04T00:00:00', '321 Pine St');
+INSERT INTO orders (user_id, status, total, order_date, shipping_address) VALUES (1, 'CANCELLED', '90.00', '2023-01-05T00:00:00', '654 Maple St');
+INSERT INTO orders (user_id, status, total, order_date, shipping_address) VALUES (1, 'PENDING', '110.00', '2023-01-06T00:00:00', '123 Main St');
+INSERT INTO orders (user_id, status, total, order_date, shipping_address) VALUES (1, 'SHIPPED', '130.00', '2023-01-07T00:00:00', '456 Elm St');
+INSERT INTO orders (user_id, status, total, order_date, shipping_address) VALUES (1, 'DELIVERED', '140.00', '2023-01-08T00:00:00', '789 Oak St');
+INSERT INTO orders (user_id, status, total, order_date, shipping_address) VALUES (1, 'RETURNED', '160.00', '2023-01-09T00:00:00', '321 Pine St');
+INSERT INTO orders (user_id, status, total, order_date, shipping_address) VALUES (1, 'CANCELLED', '170.00', '2023-01-10T00:00:00', '654 Maple St');
