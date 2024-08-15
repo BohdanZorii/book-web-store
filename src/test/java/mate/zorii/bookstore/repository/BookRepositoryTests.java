@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.jdbc.Sql;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -28,14 +29,18 @@ public class BookRepositoryTests {
 
     @Test
     @DisplayName("Find all books by existing category id")
+    @Sql(scripts = "/database/insert-book-with-id-1.sql",
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/database/delete-book-by-id-1.sql",
+            executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void findAllByCategoriesId_ExistingCategory_ReturnsBooksList() {
         Long existingCategoryId = 1L;
-        int initialBookNumber = 2;
+        int initialBooksNumber = 1;
         String expectedBookTitle = "The Hobbit";
 
         List<Book> actual = bookRepository.findAllByCategories_Id(existingCategoryId);
 
-        assertEquals(initialBookNumber, actual.size());
+        assertEquals(initialBooksNumber, actual.size());
         assertEquals(expectedBookTitle, actual.get(0).getTitle());
     }
 }
