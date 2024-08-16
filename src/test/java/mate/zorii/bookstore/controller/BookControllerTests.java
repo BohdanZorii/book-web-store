@@ -53,7 +53,7 @@ public class BookControllerTests {
     @DisplayName("Get all books with pagination")
     @Sql(scripts = "classpath:database/insert-3-books.sql",
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = "classpath:database/delete-3-books.sql",
+    @Sql(scripts = "classpath:database/delete-all-books-and-categories.sql",
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void findAll_ReturnsPageOfBooks() throws Exception {
         MvcResult result = mockMvc.perform(get("/books")
@@ -83,7 +83,7 @@ public class BookControllerTests {
     @DisplayName("Get book by existing ID")
     @Sql(scripts = "classpath:database/insert-book-with-id-1.sql",
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = "classpath:database/delete-book-by-id-1.sql",
+    @Sql(scripts = "classpath:database/delete-all-books-and-categories.sql",
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void findById_ExistingId_ReturnsBook() throws Exception {
         MvcResult result = mockMvc.perform(get("/books/{id}", 1L)
@@ -102,7 +102,7 @@ public class BookControllerTests {
     @DisplayName("Search books with criteria")
     @Sql(scripts = "classpath:database/insert-3-books.sql",
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = "classpath:database/delete-3-books.sql",
+    @Sql(scripts = "classpath:database/delete-all-books-and-categories.sql",
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void search_BooksByCriteria_ReturnsBooksList() throws Exception {
         String titlePart = "the";
@@ -126,7 +126,7 @@ public class BookControllerTests {
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     @Test
     @DisplayName("Create a new valid book")
-    @Sql(scripts = "classpath:database/delete-book-by-id-1.sql",
+    @Sql(scripts = "classpath:database/delete-all-books-and-categories.sql",
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void create_ValidBookDto_ReturnsIsOkStatus() throws Exception {
         BookDto bookDto = new BookDto()
@@ -176,7 +176,7 @@ public class BookControllerTests {
     @DisplayName("Update book by ID")
     @Sql(scripts = "classpath:database/insert-book-with-id-1.sql",
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = "classpath:database/delete-book-by-id-1.sql",
+    @Sql(scripts = "classpath:database/delete-all-books-and-categories.sql",
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void update_ExistingBookDto_ReturnsUpdatedBook() throws Exception {
         BookDto updatedBookDto = new BookDto()
@@ -204,7 +204,7 @@ public class BookControllerTests {
     @DisplayName("Delete book by ID")
     @Sql(scripts = "classpath:database/insert-book-with-id-1.sql",
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = "classpath:database/delete-book-by-id-1.sql",
+    @Sql(scripts = "classpath:database/delete-all-books-and-categories.sql",
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void delete_ExistingBookId_ReturnsNoContent() throws Exception {
         mockMvc.perform(delete("/books/{id}", 1L)

@@ -31,7 +31,7 @@ public class BookRepositoryTests {
     @DisplayName("Find all books by existing category id")
     @Sql(scripts = "/database/insert-book-with-id-1.sql",
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = "/database/delete-book-by-id-1.sql",
+    @Sql(scripts = "/database/delete-all-books-and-categories.sql",
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void findAllByCategoriesId_ExistingCategory_ReturnsBooksList() {
         Long existingCategoryId = 1L;

@@ -47,7 +47,7 @@ public class CategoryControllerTests {
     @DisplayName("Get all categories with pagination")
     @Sql(scripts = "classpath:database/insert-3-categories.sql",
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = "classpath:database/delete-3-categories.sql",
+    @Sql(scripts = "classpath:database/delete-all-books-and-categories.sql",
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void getAll_ReturnsPageOfCategories() throws Exception {
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/categories")
@@ -77,7 +77,7 @@ public class CategoryControllerTests {
     @DisplayName("Get category by existing ID")
     @Sql(scripts = "classpath:database/insert-category-with-id-1.sql",
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = "classpath:database/delete-category-by-id-1.sql",
+    @Sql(scripts = "classpath:database/delete-all-books-and-categories.sql",
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void getCategoryById_ExistingId_ReturnsCategory() throws Exception {
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/categories/{id}", 1L)
@@ -98,9 +98,7 @@ public class CategoryControllerTests {
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(scripts = "classpath:database/insert-2-books-for-category-1.sql",
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = "classpath:database/delete-category-by-id-1.sql",
-            executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-    @Sql(scripts = "classpath:database/delete-2-books-for-category-1.sql",
+    @Sql(scripts = "classpath:database/delete-all-books-and-categories.sql",
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void getBooksByCategoryId_ExistingCategory_ReturnsBooks() throws Exception {
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/categories/{id}/books", 1L)
@@ -118,7 +116,7 @@ public class CategoryControllerTests {
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     @Test
     @DisplayName("Create a new valid category")
-    @Sql(scripts = "classpath:database/delete-category-by-id-1.sql",
+    @Sql(scripts = "classpath:database/delete-all-books-and-categories.sql",
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void create_ValidCategoryDto_ReturnsCategory() throws Exception {
         CategoryDto categoryDto = new CategoryDto(1L, "Fiction", "Fiction books");
@@ -142,7 +140,7 @@ public class CategoryControllerTests {
     @DisplayName("Update an existing category")
     @Sql(scripts = "classpath:database/insert-category-with-id-1.sql",
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = "classpath:database/delete-category-by-id-1.sql",
+    @Sql(scripts = "classpath:database/delete-all-books-and-categories.sql",
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void update_ExistingCategoryDto_ReturnsUpdatedCategory() throws Exception {
         CategoryDto updatedCategoryDto =
@@ -167,7 +165,7 @@ public class CategoryControllerTests {
     @DisplayName("Delete a category by ID")
     @Sql(scripts = "classpath:database/insert-category-with-id-1.sql",
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = "classpath:database/delete-category-by-id-1.sql",
+    @Sql(scripts = "classpath:database/delete-all-books-and-categories.sql",
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void delete_ExistingCategoryId_ReturnsNoContent() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.delete("/categories/{id}", 1L)
