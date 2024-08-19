@@ -27,6 +27,3 @@ databaseChangeLog:
       file: db/changelog/changes/insertion-scripts/13-insert-orders.yaml
   - include:
       file: db/changelog/changes/insertion-scripts/14-insert-order-items.yaml
-
-
-
