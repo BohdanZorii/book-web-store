@@ -1,23 +1,32 @@
 package mate.zorii.bookstore.mapper;
 
+import java.math.BigDecimal;
+import java.util.Set;
 import mate.zorii.bookstore.config.MapperConfig;
-import mate.zorii.bookstore.dto.order.OrderItemResponseDto;
 import mate.zorii.bookstore.dto.order.OrderResponseDto;
+import mate.zorii.bookstore.dto.order.UpdateOrderResponseDto;
 import mate.zorii.bookstore.model.CartItem;
 import mate.zorii.bookstore.model.Order;
-import mate.zorii.bookstore.model.OrderItem;
+import mate.zorii.bookstore.model.ShoppingCart;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 
-@Mapper(config = MapperConfig.class)
+@Mapper(config = MapperConfig.class, uses = OrderItemMapper.class)
 public interface OrderMapper {
     @Mapping(target = "userId", source = "user.id")
-    OrderResponseDto toOrderDto(Order order);
+    OrderResponseDto toDto(Order order);
 
-    @Mapping(target = "bookId", source = "book.id")
-    OrderItemResponseDto toOrderItemDto(OrderItem orderItem);
+    UpdateOrderResponseDto toUpdateDto(Order order);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "price", source = "book.price")
-    OrderItem cartItemToOrderItem(CartItem cartItem);
+    @Mapping(target = "total", source = "cart.cartItems", qualifiedByName = "total")
+    Order cartToOrder(ShoppingCart cart, String shippingAddress);
+
+    @Named("total")
+    default BigDecimal getTotal(Set<CartItem> cartItems) {
+        return cartItems.stream()
+                .map(i -> i.getBook().getPrice().multiply(BigDecimal.valueOf(i.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
 }
