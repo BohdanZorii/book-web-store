@@ -9,6 +9,7 @@ import mate.zorii.bookstore.model.User;
 import mate.zorii.bookstore.repository.UserRepository;
 import mate.zorii.bookstore.service.ShoppingCartService;
 import mate.zorii.bookstore.service.UserService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,15 +19,17 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final ShoppingCartService shoppingCartService;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional
-    public UserResponseDto register(UserRegistrationRequestDto bookDto)
+    public UserResponseDto register(UserRegistrationRequestDto registrationDto)
             throws RegistrationException {
-        if (userRepository.existsByEmail(bookDto.email())) {
+        if (userRepository.existsByEmail(registrationDto.email())) {
             throw new RegistrationException("Email is already registered");
         }
-        User user = userMapper.toModel(bookDto);
+        User user = userMapper.toModel(registrationDto);
+        user.setPassword(passwordEncoder.encode(registrationDto.password()));
         userRepository.save(user);
         shoppingCartService.createShoppingCart(user);
         return userMapper.toDto(user);
